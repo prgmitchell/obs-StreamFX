@@ -784,7 +784,7 @@ obs_properties_t* blur_factory::get_properties2(blur_instance* data)
 		obs_property_list_add_string(p, D_TRANSLATE(S_BLUR_TYPE_BOX), "box");
 		obs_property_list_add_string(p, D_TRANSLATE(S_BLUR_TYPE_BOX_LINEAR), "box_linear");
 		obs_property_list_add_string(p, D_TRANSLATE(S_BLUR_TYPE_GAUSSIAN), "gaussian");
-		obs_property_list_add_string(p, D_TRANSLATE(S_BLUR_TYPE_GAUSSIAN_LINEAR), "gaussian_linear");
+		//obs_property_list_add_string(p, D_TRANSLATE(S_BLUR_TYPE_GAUSSIAN_LINEAR), "gaussian_linear");
 		obs_property_list_add_string(p, D_TRANSLATE(S_BLUR_TYPE_DUALFILTERING), "dual_filtering");
 
 		p = obs_properties_add_list(pr, ST_KEY_SUBTYPE, D_TRANSLATE(ST_I18N_SUBTYPE), OBS_COMBO_TYPE_LIST,
