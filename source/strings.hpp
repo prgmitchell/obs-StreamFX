@@ -5,8 +5,8 @@
 #pragma once
 #include "common.hpp"
 
-#define S_PLUGIN_NAME "StreamFX"
-#define S_PREFIX "streamfx-"
+#define S_PLUGIN_NAME "blur-filter"
+#define S_PREFIX ""
 
 #define D_TRANSLATE(x) obs_module_text(x)
 

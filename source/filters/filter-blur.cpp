@@ -141,7 +141,7 @@ blur_instance::blur_instance(obs_data_t* settings, obs_source_t* self)
 			try {
 				_effect_mask = streamfx::obs::gs::effect::create(file);
 			} catch (std::exception& ex) {
-				DLOG_ERROR("Error loading '%s': %s", file.generic_u8string().c_str(), ex.what());
+				//DLOG_ERROR("Error loading '%s': %s", file.generic_u8string().c_str(), ex.what());
 			}
 		}
 	}
@@ -354,8 +354,8 @@ void blur_instance::video_tick(float)
 				_mask.image.texture  = std::make_shared<streamfx::obs::gs::texture>(_mask.image.path);
 				_mask.image.path_old = _mask.image.path;
 			} catch (...) {
-				DLOG_ERROR("<filter-blur> Instance '%s' failed to load image '%s'.", obs_source_get_name(_self),
-						   _mask.image.path.c_str());
+				//DLOG_ERROR("<filter-blur> Instance '%s' failed to load image '%s'.", obs_source_get_name(_self),
+				//		   _mask.image.path.c_str());
 			}
 		}
 	} else if (_mask.type == mask_type::Source) {
@@ -366,8 +366,8 @@ void blur_instance::video_tick(float)
 				_mask.source.is_scene = (obs_scene_from_source(_mask.source.source_texture->get_object()) != nullptr);
 				_mask.source.name_old = _mask.source.name;
 			} catch (...) {
-				DLOG_ERROR("<filter-blur> Instance '%s' failed to grab source '%s'.", obs_source_get_name(_self),
-						   _mask.source.name.c_str());
+				//DLOG_ERROR("<filter-blur> Instance '%s' failed to grab source '%s'.", obs_source_get_name(_self),
+				//		   _mask.source.name.c_str());
 			}
 		}
 	}
@@ -571,7 +571,7 @@ void blur_instance::video_render(gs_effect_t* effect)
 
 		gs_eparam_t* param = gs_effect_get_param_by_name(finalEffect, "image");
 		if (!param) {
-			DLOG_ERROR("<filter-blur:%s> Failed to set image param.", obs_source_get_name(this->_self));
+			//DLOG_ERROR("<filter-blur:%s> Failed to set image param.", obs_source_get_name(this->_self));
 			obs_source_skip_video_filter(_self);
 			return;
 		} else {
@@ -811,61 +811,61 @@ obs_properties_t* blur_factory::get_properties2(blur_instance* data)
 											0.01);
 	}
 
-	// Masking
-	{
-		p = obs_properties_add_bool(pr, ST_KEY_MASK, D_TRANSLATE(ST_I18N_MASK));
-		obs_property_set_modified_callback2(p, modified_properties, this);
-		p = obs_properties_add_list(pr, ST_KEY_MASK_TYPE, D_TRANSLATE(ST_I18N_MASK_TYPE), OBS_COMBO_TYPE_LIST,
-									OBS_COMBO_FORMAT_INT);
-		obs_property_set_modified_callback2(p, modified_properties, this);
-		obs_property_list_add_int(p, D_TRANSLATE(ST_I18N_MASK_TYPE_REGION), static_cast<int64_t>(mask_type::Region));
-		obs_property_list_add_int(p, D_TRANSLATE(ST_I18N_MASK_TYPE_IMAGE), static_cast<int64_t>(mask_type::Image));
-		obs_property_list_add_int(p, D_TRANSLATE(ST_I18N_MASK_TYPE_SOURCE), static_cast<int64_t>(mask_type::Source));
-		/// Region
-		p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_LEFT, D_TRANSLATE(ST_I18N_MASK_REGION_LEFT), 0.0,
-											100.0, 0.01);
-		p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_TOP, D_TRANSLATE(ST_I18N_MASK_REGION_TOP), 0.0,
-											100.0, 0.01);
-		p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_RIGHT, D_TRANSLATE(ST_I18N_MASK_REGION_RIGHT), 0.0,
-											100.0, 0.01);
-		p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_BOTTOM, D_TRANSLATE(ST_I18N_MASK_REGION_BOTTOM), 0.0,
-											100.0, 0.01);
-		p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_FEATHER, D_TRANSLATE(ST_I18N_MASK_REGION_FEATHER),
-											0.0, 50.0, 0.01);
-		p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_FEATHER_SHIFT,
-											D_TRANSLATE(ST_I18N_MASK_REGION_FEATHER_SHIFT), -100.0, 100.0, 0.01);
-		p = obs_properties_add_bool(pr, ST_KEY_MASK_REGION_INVERT, D_TRANSLATE(ST_I18N_MASK_REGION_INVERT));
-		/// Image
-		{
-			std::string filter =
-				translate_string("%s (%s);;* (*.*)", D_TRANSLATE(S_FILETYPE_IMAGES), S_FILEFILTERS_TEXTURE);
-			_translation_cache.push_back(filter);
-			p = obs_properties_add_path(pr, ST_KEY_MASK_IMAGE, D_TRANSLATE(ST_I18N_MASK_IMAGE), OBS_PATH_FILE,
-										_translation_cache.back().c_str(), nullptr);
-		}
-		/// Source
-		p = obs_properties_add_list(pr, ST_KEY_MASK_SOURCE, D_TRANSLATE(ST_I18N_MASK_SOURCE), OBS_COMBO_TYPE_LIST,
-									OBS_COMBO_FORMAT_STRING);
-		obs_property_list_add_string(p, "", "");
-		obs::source_tracker::get()->enumerate(
-			[&p](std::string name, ::streamfx::obs::source) {
-				obs_property_list_add_string(p, std::string(name + " (Source)").c_str(), name.c_str());
-				return false;
-			},
-			obs::source_tracker::filter_video_sources);
-		obs::source_tracker::get()->enumerate(
-			[&p](std::string name, ::streamfx::obs::source) {
-				obs_property_list_add_string(p, std::string(name + " (Scene)").c_str(), name.c_str());
-				return false;
-			},
-			obs::source_tracker::filter_scenes);
+	//// Masking
+	//{
+	//	p = obs_properties_add_bool(pr, ST_KEY_MASK, D_TRANSLATE(ST_I18N_MASK));
+	//	obs_property_set_modified_callback2(p, modified_properties, this);
+	//	p = obs_properties_add_list(pr, ST_KEY_MASK_TYPE, D_TRANSLATE(ST_I18N_MASK_TYPE), OBS_COMBO_TYPE_LIST,
+	//								OBS_COMBO_FORMAT_INT);
+	//	obs_property_set_modified_callback2(p, modified_properties, this);
+	//	obs_property_list_add_int(p, D_TRANSLATE(ST_I18N_MASK_TYPE_REGION), static_cast<int64_t>(mask_type::Region));
+	//	obs_property_list_add_int(p, D_TRANSLATE(ST_I18N_MASK_TYPE_IMAGE), static_cast<int64_t>(mask_type::Image));
+	//	obs_property_list_add_int(p, D_TRANSLATE(ST_I18N_MASK_TYPE_SOURCE), static_cast<int64_t>(mask_type::Source));
+	//	/// Region
+	//	p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_LEFT, D_TRANSLATE(ST_I18N_MASK_REGION_LEFT), 0.0,
+	//										100.0, 0.01);
+	//	p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_TOP, D_TRANSLATE(ST_I18N_MASK_REGION_TOP), 0.0,
+	//										100.0, 0.01);
+	//	p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_RIGHT, D_TRANSLATE(ST_I18N_MASK_REGION_RIGHT), 0.0,
+	//										100.0, 0.01);
+	//	p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_BOTTOM, D_TRANSLATE(ST_I18N_MASK_REGION_BOTTOM), 0.0,
+	//										100.0, 0.01);
+	//	p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_FEATHER, D_TRANSLATE(ST_I18N_MASK_REGION_FEATHER),
+	//										0.0, 50.0, 0.01);
+	//	p = obs_properties_add_float_slider(pr, ST_KEY_MASK_REGION_FEATHER_SHIFT,
+	//										D_TRANSLATE(ST_I18N_MASK_REGION_FEATHER_SHIFT), -100.0, 100.0, 0.01);
+	//	p = obs_properties_add_bool(pr, ST_KEY_MASK_REGION_INVERT, D_TRANSLATE(ST_I18N_MASK_REGION_INVERT));
+	//	/// Image
+	//	{
+	//		std::string filter =
+	//			translate_string("%s (%s);;* (*.*)", D_TRANSLATE(S_FILETYPE_IMAGES), S_FILEFILTERS_TEXTURE);
+	//		_translation_cache.push_back(filter);
+	//		p = obs_properties_add_path(pr, ST_KEY_MASK_IMAGE, D_TRANSLATE(ST_I18N_MASK_IMAGE), OBS_PATH_FILE,
+	//									_translation_cache.back().c_str(), nullptr);
+	//	}
+	//	/// Source
+	//	p = obs_properties_add_list(pr, ST_KEY_MASK_SOURCE, D_TRANSLATE(ST_I18N_MASK_SOURCE), OBS_COMBO_TYPE_LIST,
+	//								OBS_COMBO_FORMAT_STRING);
+	//	obs_property_list_add_string(p, "", "");
+	//	obs::source_tracker::get()->enumerate(
+	//		[&p](std::string name, ::streamfx::obs::source) {
+	//			obs_property_list_add_string(p, std::string(name + " (Source)").c_str(), name.c_str());
+	//			return false;
+	//		},
+	//		obs::source_tracker::filter_video_sources);
+	//	obs::source_tracker::get()->enumerate(
+	//		[&p](std::string name, ::streamfx::obs::source) {
+	//			obs_property_list_add_string(p, std::string(name + " (Scene)").c_str(), name.c_str());
+	//			return false;
+	//		},
+	//		obs::source_tracker::filter_scenes);
 
-		/// Shared
-		p = obs_properties_add_color(pr, ST_KEY_MASK_COLOR, D_TRANSLATE(ST_I18N_MASK_COLOR));
-		p = obs_properties_add_float_slider(pr, ST_KEY_MASK_ALPHA, D_TRANSLATE(ST_I18N_MASK_ALPHA), 0.0, 100.0, 0.1);
-		p = obs_properties_add_float_slider(pr, ST_KEY_MASK_MULTIPLIER, D_TRANSLATE(ST_I18N_MASK_MULTIPLIER), 0.0, 10.0,
-											0.01);
-	}
+	//	/// Shared
+	//	p = obs_properties_add_color(pr, ST_KEY_MASK_COLOR, D_TRANSLATE(ST_I18N_MASK_COLOR));
+	//	p = obs_properties_add_float_slider(pr, ST_KEY_MASK_ALPHA, D_TRANSLATE(ST_I18N_MASK_ALPHA), 0.0, 100.0, 0.1);
+	//	p = obs_properties_add_float_slider(pr, ST_KEY_MASK_MULTIPLIER, D_TRANSLATE(ST_I18N_MASK_MULTIPLIER), 0.0, 10.0,
+	//										0.01);
+	//}
 
 	return pr;
 }

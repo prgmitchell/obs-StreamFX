@@ -47,7 +47,7 @@ streamfx::gfx::util::util()
 		try {
 			_effect = std::make_shared<::streamfx::obs::gs::effect>(file);
 		} catch (...) {
-			D_LOG_ERROR("Failed to load '%s'.", file.generic_u8string().c_str());
+			//D_LOG_ERROR("Failed to load '%s'.", file.generic_u8string().c_str());
 		}
 	}
 }
